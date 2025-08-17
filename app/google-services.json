@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "405372480238",
+    "firebase_url": "https://vinikrishbirdchecklistandroid-default-rtdb.firebaseio.com",
+    "project_id": "vinikrishbirdchecklistandroid",
+    "storage_bucket": "vinikrishbirdchecklistandroid.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405372480238:android:982e6670e8a5eee36821ff",
+        "android_client_info": {
+          "package_name": "com.vinikrish.birdchecklistandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9ThpVdUI3A1lIr6hIA0t1OfAEz_tAfko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
