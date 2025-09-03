@@ -60,14 +60,53 @@
             android:textColor="#333" />
 
         <TextView
-            android:id="@+id/userIdText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User ID: "
+            android:text="First Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/firstNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter first name"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
-            android:textColor="#666"
             android:background="#f5f5f5"
+            android:padding="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            android:textColor="#333" />
+
+        <EditText
+            android:id="@+id/lastNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter last name"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:background="#f5f5f5"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="#4CAF50"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="24dp"
             android:padding="12dp" />
 
         <TextView
@@ -76,10 +115,18 @@
             android:layout_height="wrap_content"
             android:text="Email: "
             android:textSize="16sp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:textColor="#666"
             android:background="#f5f5f5"
             android:padding="12dp" />
+
+        <!-- Bird Counts by Country Section -->
+        <LinearLayout
+            android:id="@+id/birdCountsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
 

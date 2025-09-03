@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Column 1: Bird Name (spans 2 rows) -->
+    <TextView
+        android:id="@+id/birdNameText"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:text="Bird Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Columns 2-5: Two rows for M/F and checkboxes -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:orientation="vertical">
+
+        <!-- Male Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="2dp">
+
+            <!-- Column 2: Male Icon -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/male"
+                android:contentDescription="Male"
+                android:scaleType="centerInside" />
+
+            <!-- Column 3: Male Saw Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkSawMale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+            <!-- Column 4: Male Photographed Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkPhotographedMale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+            <!-- Column 5: Male Heard Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkHeardMale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Female Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Column 2: Female Icon -->
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/female"
+                android:contentDescription="Female"
+                android:scaleType="centerInside" />
+
+            <!-- Column 3: Female Saw Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkSawFemale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+            <!-- Column 4: Female Photographed Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkPhotographedFemale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+            <!-- Column 5: Female Heard Checkbox -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkHeardFemale"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

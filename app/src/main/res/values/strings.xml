@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BirdCheckListAndroid</string>
+    
+    <!-- Google Sign-In Web Client ID - This will be auto-generated when you enable Google Sign-In in Firebase Console -->
+    <string name="default_web_client_id">405372480238-gk5au2p57h5c4p65s6j1h0bfk4oh54j7.apps.googleusercontent.com</string>
+    
+
+</resources>

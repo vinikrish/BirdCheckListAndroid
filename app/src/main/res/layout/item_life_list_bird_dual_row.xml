@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <!-- Bird Name -->
+    <TextView
+        android:id="@+id/birdNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bird Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Male Row -->
+    <LinearLayout
+        android:id="@+id/maleRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="M"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#2196F3"
+            android:layout_marginEnd="8dp"
+            android:minWidth="24dp" />
+
+        <TextView
+            android:id="@+id/countryTextMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Male Observation Icons -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="start">
+
+            <!-- Male Saw Icon -->
+            <ImageView
+                android:id="@+id/sawIconMale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/saw"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Saw Male" />
+
+            <!-- Male Photographed Icon -->
+            <ImageView
+                android:id="@+id/photographedIconMale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/photographed"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Photographed Male" />
+
+            <!-- Male Heard Icon -->
+            <ImageView
+                android:id="@+id/heardIconMale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/heard"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Heard Male" />
+
+        </LinearLayout>
+
+        <!-- Remove Button for Male -->
+        <TextView
+            android:id="@+id/removeButtonMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/orange_button_background"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Female Row -->
+    <LinearLayout
+        android:id="@+id/femaleRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#E91E63"
+            android:layout_marginEnd="8dp"
+            android:minWidth="24dp" />
+
+        <TextView
+            android:id="@+id/countryTextFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"
+            android:textSize="12sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Female Observation Icons -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="start">
+
+            <!-- Female Saw Icon -->
+            <ImageView
+                android:id="@+id/sawIconFemale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/saw"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Saw Female" />
+
+            <!-- Female Photographed Icon -->
+            <ImageView
+                android:id="@+id/photographedIconFemale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/photographed"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Photographed Female" />
+
+            <!-- Female Heard Icon -->
+            <ImageView
+                android:id="@+id/heardIconFemale"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/heard"
+                android:layout_marginEnd="4dp"
+                android:visibility="gone"
+                android:contentDescription="Heard Female" />
+
+        </LinearLayout>
+
+        <!-- Remove Button for Female -->
+        <TextView
+            android:id="@+id/removeButtonFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/orange_button_background"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

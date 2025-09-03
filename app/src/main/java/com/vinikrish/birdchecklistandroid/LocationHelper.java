@@ -203,4 +203,11 @@ public class LocationHelper {
         }
         return longitude;
     }
+    
+    public void cleanup() {
+        stopUsingGPS();
+        locationManager = null;
+        context = null;
+        location = null;
+    }
 }

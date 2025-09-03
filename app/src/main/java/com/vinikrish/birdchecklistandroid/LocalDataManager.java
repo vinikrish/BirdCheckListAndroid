@@ -51,19 +51,27 @@ public class LocalDataManager {
     }
     
     private void loadDataFromAssets() {
-        if (isDataLoaded) return;
+        if (isDataLoaded) {
+            android.util.Log.d("LocalDataManager", "Data already loaded, skipping load");
+            return;
+        }
+        
+        android.util.Log.d("LocalDataManager", "Starting to load data from assets");
         
         try {
             InputStream inputStream = context.getAssets().open("birds_master_list.json");
             int size = inputStream.available();
+            android.util.Log.d("LocalDataManager", "JSON file size: " + size + " bytes");
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
             inputStream.close();
             
             String jsonString = new String(buffer, "UTF-8");
             JSONObject jsonObject = new JSONObject(jsonString);
+            android.util.Log.d("LocalDataManager", "JSON parsed, total keys: " + jsonObject.length());
             
             Set<String> countrySet = new HashSet<>();
+            int birdCount = 0;
             
             Iterator<String> keys = jsonObject.keys();
             while (keys.hasNext()) {
@@ -74,6 +82,11 @@ public class LocalDataManager {
                 String sciName = birdObject.getString("sciName");
                 String country = birdObject.getString("country");
                 
+                birdCount++;
+                if (birdCount <= 10 || birdCount % 100 == 0) {
+                    android.util.Log.d("LocalDataManager", "Loaded bird: " + comName + ", Country: " + country + ", Total so far: " + birdCount);
+                }
+                
                 MasterBird masterBird = new MasterBird();
                 masterBird.setComName(comName);
                 masterBird.setSciName(sciName);
@@ -81,13 +94,24 @@ public class LocalDataManager {
                 
                 if (!birdsByCountry.containsKey(country)) {
                     birdsByCountry.put(country, new ArrayList<>());
+                    android.util.Log.d("LocalDataManager", "Created new country entry: " + country);
                 }
                 birdsByCountry.get(country).add(masterBird);
                 countrySet.add(country);
             }
             
+            // Log the number of birds per country
+            for (Map.Entry<String, List<MasterBird>> entry : birdsByCountry.entrySet()) {
+                android.util.Log.d("LocalDataManager", "Country: " + entry.getKey() + ", Birds: " + entry.getValue().size());
+            }
+            
             countries = new ArrayList<>(countrySet);
             Collections.sort(countries);
+            
+            android.util.Log.d("LocalDataManager", "Data loaded successfully. Total birds: " + birdCount + ", Countries: " + countries.size());
+            for (String country : countries) {
+                android.util.Log.d("LocalDataManager", "Country: " + country + ", Birds: " + birdsByCountry.get(country).size());
+            }
             
             // Sort birds within each country
             for (List<MasterBird> birds : birdsByCountry.values()) {
@@ -97,6 +121,7 @@ public class LocalDataManager {
             isDataLoaded = true;
             
         } catch (IOException | JSONException e) {
+            android.util.Log.e("LocalDataManager", "Error loading data from assets", e);
             e.printStackTrace();
         }
     }
@@ -125,9 +150,25 @@ public class LocalDataManager {
         executor.execute(() -> {
             try {
                 loadDataFromAssets();
+                android.util.Log.d("LocalDataManager", "Fetching birds for country: " + country);
+                
+                // Check if the country exists in our map
+                if (!birdsByCountry.containsKey(country)) {
+                    android.util.Log.w("LocalDataManager", "Country not found in map: " + country);
+                    android.util.Log.d("LocalDataManager", "Available countries: " + countries);
+                }
+                
                 List<MasterBird> birds = birdsByCountry.get(country);
                 if (birds == null) {
+                    android.util.Log.w("LocalDataManager", "No birds found for country: " + country);
                     birds = new ArrayList<>();
+                } else {
+                    android.util.Log.d("LocalDataManager", "Found " + birds.size() + " birds for country: " + country);
+                    if (!birds.isEmpty()) {
+                        android.util.Log.d("LocalDataManager", "Sample birds: " + 
+                            birds.get(0).getComName() + ", " + 
+                            (birds.size() > 1 ? birds.get(1).getComName() : ""));
+                    }
                 }
                 
                 // Create final reference for lambda
@@ -138,6 +179,7 @@ public class LocalDataManager {
                 mainHandler.post(() -> callback.onSuccess(new ArrayList<>(finalBirds)));
                 
             } catch (Exception e) {
+                android.util.Log.e("LocalDataManager", "Error fetching birds for country: " + country, e);
                 android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
                 mainHandler.post(() -> callback.onError(e.getMessage()));
             }

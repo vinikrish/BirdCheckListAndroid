@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.BirdCheckListAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary app color -->
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryVariant">#388E3C</item>
+        <item name="colorOnPrimary">#000000</item>
+
+        <!-- Optional: adjust these as needed -->
+        <item name="colorSecondary">#4CAF50</item>
+        <item name="colorOnSecondary">#000000</item>
+    </style>
+</resources>
