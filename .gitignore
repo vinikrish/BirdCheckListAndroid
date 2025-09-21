@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# GitHub Actions workflow (requires workflow scope permissions)
+.github/workflows/
