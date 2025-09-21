@@ -75,7 +75,7 @@
                         android:id="@+id/sawIcon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/saw"
+                        android:src="@drawable/ic_saw"
                         android:layout_marginEnd="4dp"
                         android:visibility="gone"
                         android:contentDescription="Saw" />
@@ -85,7 +85,7 @@
                         android:id="@+id/photographedIcon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/photographed"
+                        android:src="@drawable/ic_photographed"
                         android:layout_marginEnd="4dp"
                         android:visibility="gone"
                         android:contentDescription="Photographed" />
@@ -95,7 +95,7 @@
                         android:id="@+id/heardIcon"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/heard"
+                        android:src="@drawable/ic_heard"
                         android:layout_marginEnd="4dp"
                         android:visibility="gone"
                         android:contentDescription="Heard" />
@@ -107,7 +107,7 @@
         </LinearLayout>
 
         <!-- Remove Button -->
-        <TextView
+        <Button
             android:id="@+id/removeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,10 +115,10 @@
             android:textSize="14sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:padding="8dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/orange_button_background"
+            android:padding="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/button_3d_orange"
             android:clickable="true"
             android:focusable="true" />
 

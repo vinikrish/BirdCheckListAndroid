@@ -2,6 +2,8 @@ package com.vinikrish.birdchecklistandroid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -103,15 +105,47 @@ public class MainActivity extends AppCompatActivity {
         
         // Load saved login credentials if remember login is enabled
         loadSavedCredentials();
+        
+        // Update version display
+        updateVersionDisplay();
+    }
+    
+    private void updateVersionDisplay() {
+        TextView versionDisplay = findViewById(R.id.versionDisplayTop);
+        if (versionDisplay != null) {
+            try {
+                PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                String versionText = "Version " + packageInfo.versionName + " (Build " + packageInfo.versionCode + ")";
+                versionDisplay.setText(versionText);
+            } catch (PackageManager.NameNotFoundException e) {
+                versionDisplay.setText("Version information unavailable");
+            }
+        }
     }
     
     private void setupGoogleSignIn() {
+        Log.d(TAG, "Setting up Google Sign-In...");
+        
+        // Log configuration details for debugging
+        String webClientId = getString(R.string.default_web_client_id);
+        Log.d(TAG, "Web Client ID: " + webClientId);
+        Log.d(TAG, "Package Name: " + getPackageName());
+        
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(webClientId)
                 .requestEmail()
                 .build();
         
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Log.d(TAG, "Google Sign-In client created successfully");
+        
+        // Check if there's already a signed-in account
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            Log.d(TAG, "Found existing Google account: " + account.getEmail());
+        } else {
+            Log.d(TAG, "No existing Google account found");
+        }
     }
     
 
@@ -285,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void signInWithGoogle() {
+        Log.d(TAG, "Starting Google Sign-In process...");
+        Toast.makeText(this, "Starting Google Sign-In...", Toast.LENGTH_SHORT).show();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -293,23 +329,64 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-
+        Log.d(TAG, "onActivityResult called - requestCode: " + requestCode + ", resultCode: " + resultCode);
         
         // Google Sign-In result
         if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "Processing Google Sign-In result...");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                Log.d(TAG, "Google Sign-In successful - Account ID: " + account.getId());
+                Log.d(TAG, "Account Email: " + account.getEmail());
+                Log.d(TAG, "Account Display Name: " + account.getDisplayName());
+                Toast.makeText(this, "Google Sign-In successful, authenticating with Firebase...", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-                showError("Google sign in failed");
+                Log.e(TAG, "Error code: " + e.getStatusCode());
+                Log.e(TAG, "Error message: " + e.getMessage());
+                Log.e(TAG, "Error status: " + e.getStatus());
+                
+                String errorMessage = "Google sign in failed";
+                String detailedError = "";
+                
+                switch (e.getStatusCode()) {
+                    case 10:
+                        errorMessage = "Developer Configuration Error";
+                        detailedError = "SHA-1 fingerprint not configured correctly in Firebase Console. Error code: " + e.getStatusCode();
+                        break;
+                    case 12500:
+                        errorMessage = "Sign-In Disabled";
+                        detailedError = "Google Sign-In is currently disabled for this app. Error code: " + e.getStatusCode();
+                        break;
+                    case 12501:
+                        errorMessage = "Sign-In Cancelled";
+                        detailedError = "You cancelled the sign-in process. Error code: " + e.getStatusCode();
+                        break;
+                    case 12502:
+                        errorMessage = "Sign-In In Progress";
+                        detailedError = "Another sign-in is already in progress. Error code: " + e.getStatusCode();
+                        break;
+                    case 7:
+                        errorMessage = "Network Error";
+                        detailedError = "Network connection error. Please check your internet connection. Error code: " + e.getStatusCode();
+                        break;
+                    default:
+                        errorMessage = "Google Sign-In Failed";
+                        detailedError = "Unknown error occurred. Error code: " + e.getStatusCode() + ", Message: " + e.getMessage();
+                        break;
+                }
+                
+                // Show both Toast and Dialog for better visibility
+                Toast.makeText(this, errorMessage + " (Code: " + e.getStatusCode() + ")", Toast.LENGTH_LONG).show();
+                showDetailedError("Google Sign-In Error", errorMessage, detailedError);
             }
         }
     }
     
     private void firebaseAuthWithGoogle(String idToken) {
+        Log.d(TAG, "Starting Firebase authentication with Google credential...");
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -318,10 +395,35 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(MainActivity.this, "Successfully signed in with Google!", Toast.LENGTH_SHORT).show();
                             navigateToWelcome(user);
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            showError("Authentication failed");
+                            Exception exception = task.getException();
+                            String errorMessage = "Firebase Authentication Failed";
+                            String detailedError = "";
+                            
+                            if (exception != null) {
+                                Log.e(TAG, "Firebase Auth Error: " + exception.getMessage());
+                                Log.e(TAG, "Firebase Auth Error Class: " + exception.getClass().getSimpleName());
+                                detailedError = "Error: " + exception.getMessage() + "\nType: " + exception.getClass().getSimpleName();
+                                
+                                // Check for specific Firebase Auth errors
+                                if (exception.getMessage() != null) {
+                                    if (exception.getMessage().contains("network")) {
+                                        errorMessage = "Network Error";
+                                        detailedError = "Please check your internet connection and try again.";
+                                    } else if (exception.getMessage().contains("invalid")) {
+                                        errorMessage = "Invalid Credentials";
+                                        detailedError = "The Google authentication token is invalid. This might be a configuration issue.";
+                                    }
+                                }
+                            } else {
+                                detailedError = "Unknown Firebase authentication error occurred.";
+                            }
+                            
+                            Toast.makeText(MainActivity.this, "Firebase Auth Failed", Toast.LENGTH_LONG).show();
+                            showDetailedError("Firebase Authentication Error", errorMessage, detailedError);
                         }
                     }
                 });
@@ -331,8 +433,8 @@ public class MainActivity extends AppCompatActivity {
     
     private void navigateToWelcome(FirebaseUser user) {
         Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
-        intent.putExtra("username", user.getEmail()); // Use email as username
-        intent.putExtra("userId", user.getUid()); // Pass Firebase user ID
+        intent.putExtra("user_email", user.getEmail());
+        intent.putExtra("user_name", user.getDisplayName());
         startActivity(intent);
         finish();
     }
@@ -392,6 +494,23 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Error")
                 .setMessage(message)
                 .setPositiveButton("OK", null)
+                .show();
+    }
+    
+    private void showDetailedError(String title, String message, String details) {
+        String fullMessage = message + "\n\nDetails:\n" + details + 
+                           "\n\nIf this problem persists, please contact support with this error information.";
+        
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(fullMessage)
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Copy Error", (dialog, which) -> {
+                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+                    android.content.ClipData clip = android.content.ClipData.newPlainText("Error Details", title + "\n" + fullMessage);
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(this, "Error details copied to clipboard", Toast.LENGTH_SHORT).show();
+                })
                 .show();
     }
 }

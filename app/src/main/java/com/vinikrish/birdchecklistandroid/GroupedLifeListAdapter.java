@@ -156,7 +156,7 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_COUNTRY_HEADER) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_group_header, parent, false);
+                    .inflate(R.layout.item_country_header, parent, false);
             return new CountryHeaderViewHolder(view);
         } else if (viewType == TYPE_ALPHABET_HEADER) {
             View view = LayoutInflater.from(parent.getContext())
@@ -203,15 +203,58 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         rebuildItems();
     }
     
+    private void expandAllInCountry(String country) {
+        // First expand the country
+        expandedCountries.put(country, true);
+        
+        // Then expand all alphabets within this country
+        Set<String> alphabetsInCountry = new HashSet<>();
+        for (Bird bird : allBirds) {
+            if (bird.getCountry().equals(country)) {
+                String firstLetter = bird.getComName().substring(0, 1).toUpperCase();
+                alphabetsInCountry.add(firstLetter);
+            }
+        }
+        
+        // Expand all alphabets found in this country
+        for (String letter : alphabetsInCountry) {
+            String alphabetKey = country + "_" + letter;
+            expandedAlphabets.put(alphabetKey, true);
+        }
+        
+        rebuildItems();
+    }
+    
+    private boolean areAllAlphabetsExpanded(String country) {
+        // Get all unique alphabets for this country
+        Set<String> alphabetsInCountry = new HashSet<>();
+        for (Bird bird : allBirds) {
+            if (bird.getCountry().equals(country)) {
+                String firstLetter = bird.getComName().substring(0, 1).toUpperCase();
+                alphabetsInCountry.add(firstLetter);
+            }
+        }
+        
+        // Check if all alphabets are expanded
+        for (String letter : alphabetsInCountry) {
+            String alphabetKey = country + "_" + letter;
+            if (!expandedAlphabets.getOrDefault(alphabetKey, false)) {
+                return false;
+            }
+        }
+        
+        return !alphabetsInCountry.isEmpty(); // Return true only if there are alphabets and all are expanded
+    }
+    
     // ViewHolder for country headers
     class CountryHeaderViewHolder extends RecyclerView.ViewHolder {
         TextView headerText;
-        TextView expandIcon;
+        ImageView expandIcon;
         
         CountryHeaderViewHolder(View itemView) {
             super(itemView);
-            headerText = itemView.findViewById(R.id.header_text);
-            expandIcon = itemView.findViewById(R.id.expand_icon);
+            headerText = itemView.findViewById(R.id.countryName);
+            expandIcon = itemView.findViewById(R.id.expandIcon);
             
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -225,7 +268,10 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         void bind(CountryHeader header) {
             headerText.setText(header.getCountry() + " (" + header.getCount() + " birds)");
             boolean isExpanded = expandedCountries.getOrDefault(header.getCountry(), false);
-            expandIcon.setText(isExpanded ? "▼" : "▶");
+            
+            // Rotate the arrow icon based on expanded state
+            float rotation = isExpanded ? 90f : 0f;
+            expandIcon.setRotation(rotation);
         }
     }
     
@@ -262,6 +308,8 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private View femaleRow;
         private TextView countryTextMale;
         private TextView countryTextFemale;
+        private ImageView maleIcon;
+        private ImageView femaleIcon;
         private ImageView sawIconMale;
         private ImageView photographedIconMale;
         private ImageView heardIconMale;
@@ -278,6 +326,8 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             femaleRow = itemView.findViewById(R.id.femaleRow);
             countryTextMale = itemView.findViewById(R.id.countryTextMale);
             countryTextFemale = itemView.findViewById(R.id.countryTextFemale);
+            maleIcon = itemView.findViewById(R.id.maleIcon);
+            femaleIcon = itemView.findViewById(R.id.femaleIcon);
             sawIconMale = itemView.findViewById(R.id.sawIconMale);
             photographedIconMale = itemView.findViewById(R.id.photographedIconMale);
             heardIconMale = itemView.findViewById(R.id.heardIconMale);
@@ -297,6 +347,9 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 maleRow.setVisibility(View.VISIBLE);
                 countryTextMale.setText(combinedBird.getCountry());
                 
+                // Show male icon
+                maleIcon.setVisibility(View.VISIBLE);
+                
                 // Show male observation icons
                 sawIconMale.setVisibility(maleData.isSaw() ? View.VISIBLE : View.GONE);
                 photographedIconMale.setVisibility(maleData.isPhotographed() ? View.VISIBLE : View.GONE);
@@ -306,6 +359,9 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 sawIconMale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Saw Male", "Indicates that a male bird was visually observed"));
                 photographedIconMale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Photographed Male", "Indicates that a male bird was photographed"));
                 heardIconMale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Heard Male", "Indicates that a male bird was heard"));
+                
+                // Set click listener for male icon
+                maleIcon.setOnClickListener(v -> showIconTooltip(v.getContext(), "Male", "Indicates that a male bird was observed"));
                 
                 // Set remove button click listener for male
                 removeButtonMale.setOnClickListener(v -> {
@@ -324,6 +380,7 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 });
             } else {
                 maleRow.setVisibility(View.GONE);
+                maleIcon.setVisibility(View.GONE);
             }
             
             // Show/hide female row based on female data
@@ -331,6 +388,9 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (femaleData != null) {
                 femaleRow.setVisibility(View.VISIBLE);
                 countryTextFemale.setText(combinedBird.getCountry());
+                
+                // Show female icon
+                femaleIcon.setVisibility(View.VISIBLE);
                 
                 // Show female observation icons
                 sawIconFemale.setVisibility(femaleData.isSaw() ? View.VISIBLE : View.GONE);
@@ -341,6 +401,9 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 sawIconFemale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Saw Female", "Indicates that a female bird was visually observed"));
                 photographedIconFemale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Photographed Female", "Indicates that a female bird was photographed"));
                 heardIconFemale.setOnClickListener(v -> showIconTooltip(v.getContext(), "Heard Female", "Indicates that a female bird was heard"));
+                
+                // Set click listener for female icon
+                femaleIcon.setOnClickListener(v -> showIconTooltip(v.getContext(), "Female", "Indicates that a female bird was observed"));
                 
                 // Set remove button click listener for female
                 removeButtonFemale.setOnClickListener(v -> {
@@ -359,6 +422,7 @@ public class GroupedLifeListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 });
             } else {
                 femaleRow.setVisibility(View.GONE);
+                femaleIcon.setVisibility(View.GONE);
             }
         }
         

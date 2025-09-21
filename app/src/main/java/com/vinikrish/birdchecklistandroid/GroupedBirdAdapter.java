@@ -1,5 +1,6 @@
 package com.vinikrish.birdchecklistandroid;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.vinikrish.birdchecklistandroid.models.Bird;
 import com.vinikrish.birdchecklistandroid.models.BirdGroup;
@@ -152,6 +154,8 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return selectedBirds;
     }
     
+
+    
     public Map<Bird, boolean[]> getCheckboxStates() {
         return checkboxStates;
     }
@@ -164,7 +168,10 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // First, clear checkbox states for all birds that are no longer in existingBirds
         List<Bird> birdsToRemove = new ArrayList<>();
         for (Bird bird : checkboxStates.keySet()) {
-            if (!existingBirds.containsKey(bird.getComName())) {
+            // Check if either male or female record exists for this bird
+            String maleKey = bird.getComName() + "_M";
+            String femaleKey = bird.getComName() + "_F";
+            if (!existingBirds.containsKey(maleKey) && !existingBirds.containsKey(femaleKey)) {
                 birdsToRemove.add(bird);
                 android.util.Log.d("GroupedBirdAdapter", "Clearing checkbox states for removed bird: " + bird.getComName());
             }
@@ -183,45 +190,42 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         android.util.Log.d("GroupedBirdAdapter", "Total birds in current groups: " + totalBirdsInGroups);
         
         // Update checkbox states for existing birds
-        int logCount = 0;
-        for (Map.Entry<String, Bird> entry : existingBirds.entrySet()) {
-            String birdName = entry.getKey();
-            Bird existingBird = entry.getValue();
-            android.util.Log.d("GroupedBirdAdapter", "Looking for existing bird: '" + birdName + "'");
-            
-            boolean found = false;
-            // Find matching bird in current display and update checkbox states
-            for (BirdGroup group : birdGroups) {
-                for (Bird bird : group.getBirds()) {
-                    // Only log first few comparisons to avoid spam
-                    if (logCount < 5) {
-                        android.util.Log.d("GroupedBirdAdapter", "Sample comparison - existing: '" + birdName + "' vs JSON: '" + bird.getComName() + "'");
-                        logCount++;
+        // Process each bird in the current groups and look for corresponding male/female records
+        for (BirdGroup group : birdGroups) {
+            for (Bird bird : group.getBirds()) {
+                String maleKey = bird.getComName() + "_M";
+                String femaleKey = bird.getComName() + "_F";
+                
+                Bird maleRecord = existingBirds.get(maleKey);
+                Bird femaleRecord = existingBirds.get(femaleKey);
+                
+                if (maleRecord != null || femaleRecord != null) {
+                    android.util.Log.d("GroupedBirdAdapter", "Setting checkbox states for: " + bird.getComName() + 
+                                      " (Male: " + (maleRecord != null) + ", Female: " + (femaleRecord != null) + ")");
+                    
+                    boolean[] states = new boolean[6];
+                    // Set states: [sawMale, photographedMale, heardMale, sawFemale, photographedFemale, heardFemale]
+                    
+                    // Set male observation states
+                    if (maleRecord != null) {
+                        states[0] = maleRecord.isSawMale(); // sawMale
+                        states[1] = maleRecord.isPhotographedMale(); // photographedMale
+                        states[2] = maleRecord.isHeardMale(); // heardMale
+                        android.util.Log.d("GroupedBirdAdapter", "Male observations - Saw: " + states[0] + 
+                                          ", Photographed: " + states[1] + ", Heard: " + states[2]);
                     }
-                    if (bird.getComName().equals(birdName)) {
-                        android.util.Log.d("GroupedBirdAdapter", "Match found! Setting checkbox states for: " + bird.getComName());
-                        boolean[] states = new boolean[6];
-                        // Set states: [sawMale, photographedMale, heardMale, sawFemale, photographedFemale, heardFemale]
-                        if (existingBird.isMale()) {
-                            states[0] = existingBird.isSaw(); // sawMale
-                            states[1] = existingBird.isPhotographed(); // photographedMale
-                            states[2] = existingBird.isHeard(); // heardMale
-                        }
-                        if (existingBird.isFemale()) {
-                            states[3] = existingBird.isSaw(); // sawFemale
-                            states[4] = existingBird.isPhotographed(); // photographedFemale
-                            states[5] = existingBird.isHeard(); // heardFemale
-                        }
-                        checkboxStates.put(bird, states);
-                        found = true;
-                        break;
+                    
+                    // Set female observation states
+                    if (femaleRecord != null) {
+                        states[3] = femaleRecord.isSawFemale(); // sawFemale
+                        states[4] = femaleRecord.isPhotographedFemale(); // photographedFemale
+                        states[5] = femaleRecord.isHeardFemale(); // heardFemale
+                        android.util.Log.d("GroupedBirdAdapter", "Female observations - Saw: " + states[3] + 
+                                          ", Photographed: " + states[4] + ", Heard: " + states[5]);
                     }
+                    
+                    checkboxStates.put(bird, states);
                 }
-                if (found) break;
-            }
-            
-            if (!found) {
-                android.util.Log.d("GroupedBirdAdapter", "No match found for existing bird: '" + birdName + "'");
             }
         }
         notifyDataSetChanged();
@@ -283,12 +287,16 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     // Bird ViewHolder
     class BirdViewHolder extends RecyclerView.ViewHolder {
         TextView birdName;
+        ImageView maleIcon, femaleIcon;
         CheckBox checkSawMale, checkPhotographedMale, checkHeardMale;
         CheckBox checkSawFemale, checkPhotographedFemale, checkHeardFemale;
         
         public BirdViewHolder(@NonNull View itemView) {
             super(itemView);
             birdName = itemView.findViewById(R.id.birdNameText);
+            // M/F icons
+            maleIcon = itemView.findViewById(R.id.maleIcon);
+            femaleIcon = itemView.findViewById(R.id.femaleIcon);
             // Male checkboxes
             checkSawMale = itemView.findViewById(R.id.checkSawMale);
             checkPhotographedMale = itemView.findViewById(R.id.checkPhotographedMale);
@@ -297,6 +305,10 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             checkSawFemale = itemView.findViewById(R.id.checkSawFemale);
             checkPhotographedFemale = itemView.findViewById(R.id.checkPhotographedFemale);
             checkHeardFemale = itemView.findViewById(R.id.checkHeardFemale);
+            
+            // Set click listeners for M/F icons
+            maleIcon.setOnClickListener(v -> showIconDescription(v.getContext(), "Male", "Indicates observations for male birds"));
+            femaleIcon.setOnClickListener(v -> showIconDescription(v.getContext(), "Female", "Indicates observations for female birds"));
         }
         
         public void bind(Bird bird) {
@@ -356,34 +368,11 @@ public class GroupedBirdAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
     
-    private void showCustomTooltip(View anchorView, String message) {
-        // Inflate the custom tooltip layout
-        LayoutInflater inflater = LayoutInflater.from(anchorView.getContext());
-        View tooltipView = inflater.inflate(R.layout.custom_tooltip, null);
-        
-        // Set the tooltip text
-        TextView tooltipText = tooltipView.findViewById(R.id.tooltipText);
-        tooltipText.setText(message);
-        
-        // Create and configure the popup window
-        PopupWindow popupWindow = new PopupWindow(tooltipView, 
-            ViewGroup.LayoutParams.WRAP_CONTENT, 
-            ViewGroup.LayoutParams.WRAP_CONTENT, 
-            true);
-        
-        // Set popup window properties
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setFocusable(true);
-        
-        // Calculate position to show above the anchor view
-        int[] location = new int[2];
-        anchorView.getLocationOnScreen(location);
-        
-        // Show the popup above the anchor view
-        popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY, 
-            location[0], location[1] - tooltipView.getMeasuredHeight() - 20);
-        
-        // Auto-dismiss after 2 seconds
-        anchorView.postDelayed(popupWindow::dismiss, 2000);
+    private void showIconDescription(Context context, String title, String description) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(description)
+                .setPositiveButton("OK", null)
+                .show();
     }
 }

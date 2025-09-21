@@ -1,30 +1,70 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:endX="85.84757"
-                android:endY="92.4963"
-                android:startX="42.9492"
-                android:startY="49.59793"
-                android:type="linear">
-                <item
-                    android:color="#44000000"
-                    android:offset="0.0" />
-                <item
-                    android:color="#00000000"
-                    android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
-    <path
-        android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
-        android:strokeWidth="1"
-        android:strokeColor="#00000000" />
+    
+    <!-- Bird Silhouette - Larger and repositioned -->
+    <group android:translateX="25" android:translateY="15" android:scaleX="1.2" android:scaleY="1.2">
+        <!-- Bird Body -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M25,35 Q35,25 45,35 Q45,45 35,50 Q25,45 25,35 Z" />
+        <!-- Bird Head -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M15,25 Q25,15 35,25 Q35,35 25,35 Q15,35 15,25 Z" />
+        <!-- Bird Beak -->
+        <path
+            android:fillColor="#FF6F00"
+            android:pathData="M10,25 L15,27 L15,23 Z" />
+        <!-- Bird Eye -->
+        <circle
+            android:fillColor="#FFFFFF"
+            android:pathData="M22,25 A2,2 0 0,1 26,25 A2,2 0 0,1 22,25" />
+        <!-- Bird Wing -->
+        <path
+            android:fillColor="#2E7D32"
+            android:pathData="M35,30 Q45,25 50,35 Q45,40 35,35 Z" />
+    </group>
+    
+    <!-- Checklist - Larger and repositioned -->
+    <group android:translateX="15" android:translateY="55" android:scaleX="1.1" android:scaleY="1.1">
+        <!-- Checklist Background -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#E0E0E0"
+            android:strokeWidth="1"
+            android:pathData="M0,0 L40,0 Q42,0 42,2 L42,28 Q42,30 40,30 L0,30 Q-2,30 -2,28 L-2,2 Q-2,0 0,0 Z" />
+        
+        <!-- Checklist Items -->
+        <!-- Item 1 - Checked -->
+        <path
+            android:fillColor="#4CAF50"
+            android:pathData="M3,5 L7,5 L7,9 L3,9 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeWidth="1"
+            android:pathData="M4,7 L5.5,8.5 L7.5,6" />
+        
+        <!-- Item 2 - Checked -->
+        <path
+            android:fillColor="#4CAF50"
+            android:pathData="M3,12 L7,12 L7,16 L3,16 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeWidth="1"
+            android:pathData="M4,14 L5.5,15.5 L7.5,13" />
+        
+        <!-- Item 3 - Unchecked -->
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M3,19 L7,19 L7,23 L3,23 Z" />
+        
+        <!-- Item 4 - Unchecked -->
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M3,26 L7,26 L7,30 L3,30 Z" />
+    </group>
+    
 </vector>

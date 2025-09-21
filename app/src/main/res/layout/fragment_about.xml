@@ -123,7 +123,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/saw"
+                android:src="@drawable/ic_saw"
                 android:layout_marginEnd="16dp" />
 
             <LinearLayout
@@ -160,7 +160,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/photographed"
+                android:src="@drawable/ic_photographed"
                 android:layout_marginEnd="16dp" />
 
             <LinearLayout
@@ -197,7 +197,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/heard"
+                android:src="@drawable/ic_heard"
                 android:layout_marginEnd="16dp" />
 
             <LinearLayout
@@ -241,11 +241,32 @@
             android:lineSpacingExtra="4dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Version Info -->
+        <!-- Privacy Statement Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Version 1.0\nDeveloped for bird enthusiasts worldwide"
+            android:text="Privacy Policy"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Effective Date: January 2025\n\nData Collection and Use:\nWe collect the following types of data to provide our bird tracking services:\n\n• Personal Information: Email address and name for account creation and authentication\n• Location Data: Approximate location to automatically detect your country for bird list filtering\n• Bird Observation Data: Your bird sightings, photos, and notes stored securely in Firebase\n• Device Information: Basic device identifiers for app functionality\n\nThird-Party Services:\nThis app uses the following third-party services that may collect data:\n\n• Google Firebase: For secure data storage and user authentication\n• Google Sign-In: For account creation and login\n• Google AdMob: For displaying advertisements (contains ads)\n• Google Play Services: For location services and app functionality\n\nData Security:\nAll personal and sensitive data is transmitted using modern encryption (HTTPS) and stored securely in Google Firebase with industry-standard security measures.\n\nData Retention and Deletion:\nYour data is retained as long as your account is active. You may request data deletion by contacting us or deleting your account.\n\nUser Rights:\nYou have the right to:\n• Access your personal data\n• Correct inaccurate data\n• Delete your account and data\n• Withdraw consent for data processing\n\nData Sharing:\nWe do not sell your personal data. Data may only be shared:\n• With your explicit consent\n• For legal compliance\n• With service providers under strict confidentiality agreements\n\nContact:\nFor privacy questions or data requests, please contact us at:\nEmail: support@devheaven.link\nDeveloper: devheaven.link\n\nYou can also reach us through the app settings menu."
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="16dp"
+            android:lineSpacingExtra="2dp" />
+
+        <!-- Version Info -->
+        <TextView
+            android:id="@+id/version_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Version 1.3 (Build 4)\nDeveloped for bird enthusiasts worldwide"
             android:textSize="14sp"
             android:textColor="#888"
             android:gravity="center"

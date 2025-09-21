@@ -13,6 +13,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class WelcomeActivity extends AppCompatActivity implements AddBirdsFragment.OnBirdsSavedListener {
     private static final String TAG = "WelcomeActivity";
@@ -21,6 +26,7 @@ public class WelcomeActivity extends AppCompatActivity implements AddBirdsFragme
     private ViewPager viewPager;
     private ImageView profileIcon;
     private FirebaseAuth mAuth;
+    private AdView mAdView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,7 @@ public class WelcomeActivity extends AppCompatActivity implements AddBirdsFragme
         }
         
         initializeViews();
+        initializeAds();
         setupTabs();
     }
     
@@ -48,9 +55,26 @@ public class WelcomeActivity extends AppCompatActivity implements AddBirdsFragme
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
         profileIcon = findViewById(R.id.profileIcon);
+        mAdView = findViewById(R.id.adView);
         
         // Set up profile icon click listener
         profileIcon.setOnClickListener(v -> showProfileMenu(v));
+    }
+    
+    private void initializeAds() {
+        // Initialize the Mobile Ads SDK
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                // Load the banner ad
+                loadBannerAd();
+            }
+        });
+    }
+    
+    private void loadBannerAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
     
     private void showProfileMenu(android.view.View view) {

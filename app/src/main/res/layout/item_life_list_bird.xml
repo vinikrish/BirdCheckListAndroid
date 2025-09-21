@@ -13,7 +13,7 @@
         android:text="Bird Name"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/text_primary" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:text="Country"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@color/text_secondary" />
 
         <TextView
             android:id="@+id/genderText"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="Gender"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/text_secondary"
             android:layout_marginStart="8dp" />
 
     </LinearLayout>

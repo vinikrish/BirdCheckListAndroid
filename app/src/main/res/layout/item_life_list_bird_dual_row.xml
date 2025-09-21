@@ -27,15 +27,13 @@
         android:layout_marginBottom="4dp"
         android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="M"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#2196F3"
+        <ImageView
+            android:id="@+id/maleIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/male"
             android:layout_marginEnd="8dp"
-            android:minWidth="24dp" />
+            android:contentDescription="Male" />
 
         <TextView
             android:id="@+id/countryTextMale"
@@ -59,7 +57,7 @@
                 android:id="@+id/sawIconMale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/saw"
+                android:src="@drawable/ic_saw"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Saw Male" />
@@ -69,7 +67,7 @@
                 android:id="@+id/photographedIconMale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/photographed"
+                android:src="@drawable/ic_photographed"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Photographed Male" />
@@ -79,7 +77,7 @@
                 android:id="@+id/heardIconMale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/heard"
+                android:src="@drawable/ic_heard"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Heard Male" />
@@ -113,15 +111,13 @@
         android:gravity="center_vertical"
         android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="F"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#E91E63"
+        <ImageView
+            android:id="@+id/femaleIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/female"
             android:layout_marginEnd="8dp"
-            android:minWidth="24dp" />
+            android:contentDescription="Female" />
 
         <TextView
             android:id="@+id/countryTextFemale"
@@ -145,7 +141,7 @@
                 android:id="@+id/sawIconFemale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/saw"
+                android:src="@drawable/ic_saw"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Saw Female" />
@@ -155,7 +151,7 @@
                 android:id="@+id/photographedIconFemale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/photographed"
+                android:src="@drawable/ic_photographed"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Photographed Female" />
@@ -165,7 +161,7 @@
                 android:id="@+id/heardIconFemale"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/heard"
+                android:src="@drawable/ic_heard"
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 android:contentDescription="Heard Female" />

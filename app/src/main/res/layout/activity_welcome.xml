@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/appIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:src="@drawable/logo"
             android:layout_marginEnd="12dp"
             android:scaleType="centerInside"
@@ -26,16 +26,17 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="BirdCheckList"
-            android:textSize="20sp"
+            android:text="Bird Life List"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:layout_weight="1"
+            android:gravity="center"
             android:textColor="@android:color/white" />
 
         <ImageView
             android:id="@+id/profileIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:src="@drawable/ic_profile"
             android:clickable="true"
             android:focusable="true"
@@ -48,34 +49,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E3F2FD"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:layout_margin="8dp">
+        android:gravity="center"
+        android:padding="8dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Nice job!"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#1976D2" />
-
-        <TextView
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="This is a 468x60 test ad."
-            android:textSize="14sp"
-            android:textColor="#666" />
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_dialog_info"
-            android:layout_marginStart="8dp"
-            android:contentDescription="Ad Info" />
+            android:layout_gravity="center"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-5195532564161119/7115420024" />
 
     </LinearLayout>
 

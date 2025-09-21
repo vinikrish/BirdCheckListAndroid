@@ -8,5 +8,15 @@
         <!-- Optional: adjust these as needed -->
         <item name="colorSecondary">#4CAF50</item>
         <item name="colorOnSecondary">#000000</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background_primary</item>
+        <item name="colorSurface">@color/background_card</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
     </style>
 </resources>

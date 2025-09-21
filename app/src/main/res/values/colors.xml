@@ -7,4 +7,18 @@
     <color name="secondary_color">#757575</color>
     <color name="green_primary">#4CAF50</color>
     <color name="green_dark">#388E3C</color>
+    
+    <!-- Text colors that adapt to theme -->
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#666666</color>
+    <color name="text_hint">#999999</color>
+    
+    <!-- Background colors -->
+    <color name="background_primary">#FFFFFF</color>
+    <color name="background_secondary">#F5F5F5</color>
+    <color name="background_card">#FFFFFF</color>
+    
+    <!-- Header colors -->
+    <color name="header_background">#E3F2FD</color>
+    <color name="header_text">#1976D2</color>
 </resources>

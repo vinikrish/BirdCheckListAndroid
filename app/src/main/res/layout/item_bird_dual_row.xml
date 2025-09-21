@@ -36,6 +36,7 @@
 
             <!-- Column 2: Male Icon -->
             <ImageView
+                android:id="@+id/maleIcon"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
                 android:layout_weight="1"
@@ -90,6 +91,7 @@
 
             <!-- Column 2: Female Icon -->
             <ImageView
+                android:id="@+id/femaleIcon"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
                 android:layout_weight="1"

@@ -85,20 +85,32 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        String firstName = sharedPreferences.getString(KEY_FIRST_NAME, "");
-        String lastName = sharedPreferences.getString(KEY_LAST_NAME, "");
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            return;
+        }
+        
+        String userId = currentUser.getUid();
+        String firstName = sharedPreferences.getString(KEY_FIRST_NAME + "_" + userId, "");
+        String lastName = sharedPreferences.getString(KEY_LAST_NAME + "_" + userId, "");
         
         firstNameEdit.setText(firstName);
         lastNameEdit.setText(lastName);
     }
 
     private void saveUserData() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            return;
+        }
+        
+        String userId = currentUser.getUid();
         String firstName = firstNameEdit.getText().toString().trim();
         String lastName = lastNameEdit.getText().toString().trim();
         
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY_FIRST_NAME, firstName);
-        editor.putString(KEY_LAST_NAME, lastName);
+        editor.putString(KEY_FIRST_NAME + "_" + userId, firstName);
+        editor.putString(KEY_LAST_NAME + "_" + userId, lastName);
         editor.apply();
         
         CustomDialogUtils.showSuccessDialog(this, "Success", "Profile saved successfully!");

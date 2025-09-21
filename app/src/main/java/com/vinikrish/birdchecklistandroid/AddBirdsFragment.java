@@ -780,10 +780,16 @@ public class AddBirdsFragment extends Fragment {
                 for (DataSnapshot birdSnapshot : dataSnapshot.getChildren()) {
                     Bird bird = birdSnapshot.getValue(Bird.class);
                     if (bird != null && userId.equals(bird.getUserId())) {
-                        existingBirds.put(bird.getComName(), bird);
-                        Log.d(TAG, "Loaded existing bird: " + bird.getComName() + 
-                              " - Female: " + bird.isFemale() + 
-                              ", Male: " + bird.isMale() + 
+                        String comName = bird.getComName();
+                        String gender = bird.getGender();
+                        
+                        // Create composite key for gender-specific storage
+                        String compositeKey = comName + "_" + gender;
+                        
+                        // Store each gender record separately
+                        existingBirds.put(compositeKey, bird);
+                        Log.d(TAG, "Added existing bird with composite key: " + compositeKey + 
+                              " - Gender: " + gender + 
                               ", Saw: " + bird.isSaw() + 
                               ", Photographed: " + bird.isPhotographed() + 
                               ", Heard: " + bird.isHeard());
@@ -812,10 +818,15 @@ public class AddBirdsFragment extends Fragment {
     }
     
     private void saveSelectedBirds() {
-        Log.d(TAG, "saveSelectedBirds() called");
+        long startTime = System.currentTimeMillis();
+        Log.d(TAG, "=== SAVE OPERATION STARTED ===");
+        Log.d(TAG, "saveSelectedBirds() called at: " + startTime);
         
-        // Get the selected birds from the adapter
+        // Get selected birds
+        long getSelectedBirdsStart = System.currentTimeMillis();
         List<Bird> selectedBirds = groupedBirdAdapter.getSelectedBirds();
+        long getSelectedBirdsEnd = System.currentTimeMillis();
+        Log.d(TAG, "getSelectedBirds() took: " + (getSelectedBirdsEnd - getSelectedBirdsStart) + "ms");
         Log.d(TAG, "Selected birds count: " + selectedBirds.size());
         
         if (selectedBirds.isEmpty()) {
@@ -830,16 +841,22 @@ public class AddBirdsFragment extends Fragment {
         }
         
         // Get the selected country from spinner
+        long getCountryStart = System.currentTimeMillis();
         String selectedCountry = null;
         if (countrySpinner.getSelectedItem() != null) {
             selectedCountry = countrySpinner.getSelectedItem().toString();
         }
+        long getCountryEnd = System.currentTimeMillis();
+        Log.d(TAG, "Getting country took: " + (getCountryEnd - getCountryStart) + "ms");
         Log.d(TAG, "Selected country: " + selectedCountry);
         Log.d(TAG, "Username: " + username + ", UserId: " + userId);
 
         // Create clean Bird objects for Firebase with gender-specific observations
+        long getCheckboxStatesStart = System.currentTimeMillis();
         List<Bird> cleanBirds = new ArrayList<>();
         Map<Bird, boolean[]> checkboxStates = groupedBirdAdapter.getCheckboxStates();
+        long getCheckboxStatesEnd = System.currentTimeMillis();
+        Log.d(TAG, "getCheckboxStates() took: " + (getCheckboxStatesEnd - getCheckboxStatesStart) + "ms");
         Log.d(TAG, "Checkbox states map size: " + checkboxStates.size());
         
         for (Bird bird : selectedBirds) {
@@ -899,13 +916,22 @@ public class AddBirdsFragment extends Fragment {
             }
         }
 
+        long processingEnd = System.currentTimeMillis();
+        Log.d(TAG, "Bird processing took: " + (processingEnd - getCheckboxStatesStart) + "ms");
         Log.d(TAG, "About to save " + cleanBirds.size() + " birds to Firebase");
         
-        // Save to Firebase with callback
-        FirebaseManager.getInstance().saveBirds(cleanBirds, new FirebaseManager.OnBirdsSavedListener() {
+        // Save to Firebase with optimized callback using existing birds data
+        long firebaseSaveStart = System.currentTimeMillis();
+        Log.d(TAG, "Starting Firebase save at: " + firebaseSaveStart);
+        FirebaseManager.getInstance().saveBirdsOptimized(cleanBirds, existingBirds, new FirebaseManager.OnBirdsSavedListener() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "Firebase save successful");
+                long firebaseSaveEnd = System.currentTimeMillis();
+                long totalTime = firebaseSaveEnd - startTime;
+                Log.d(TAG, "=== SAVE OPERATION COMPLETED ===");
+                Log.d(TAG, "Firebase save successful at: " + firebaseSaveEnd);
+                Log.d(TAG, "Firebase save took: " + (firebaseSaveEnd - firebaseSaveStart) + "ms");
+                Log.d(TAG, "Total save operation took: " + totalTime + "ms");
                 // Show success dialog
                 new AlertDialog.Builder(getContext())
                         .setTitle("Success")
@@ -927,7 +953,12 @@ public class AddBirdsFragment extends Fragment {
 
             @Override
             public void onFailure(String error) {
+                long firebaseSaveEnd = System.currentTimeMillis();
+                long totalTime = firebaseSaveEnd - startTime;
+                Log.e(TAG, "=== SAVE OPERATION FAILED ===");
                 Log.e(TAG, "Firebase save failed: " + error);
+                Log.e(TAG, "Failed Firebase save took: " + (firebaseSaveEnd - firebaseSaveStart) + "ms");
+                Log.e(TAG, "Total failed save operation took: " + totalTime + "ms");
                 // Show error dialog
                 new AlertDialog.Builder(getContext())
                         .setTitle("Error")
