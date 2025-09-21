@@ -6,14 +6,17 @@ plugins {
 
 android {
     namespace 'com.vinikrish.birdchecklistandroid'
-    compileSdk 34
+    compileSdk 35
+    buildToolsVersion "35.0.0"
 
     defaultConfig {
         applicationId "com.vinikrish.birdchecklistandroid"
         minSdk 24
-        targetSdk 34
-        versionCode 6
-        versionName "1.4"
+        targetSdk 35
+        // Dynamic version code based on timestamp to prevent conflicts
+        // Format: YYYYMMDDHH (year + month + day + hour)
+        versionCode Integer.parseInt(new Date().format('yyyyMMddHH'))
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

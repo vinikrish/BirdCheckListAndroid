@@ -320,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
     
     private void signInWithGoogle() {
         Log.d(TAG, "Starting Google Sign-In process...");
-        Toast.makeText(this, "Starting Google Sign-In...", Toast.LENGTH_SHORT).show();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -340,7 +339,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Google Sign-In successful - Account ID: " + account.getId());
                 Log.d(TAG, "Account Email: " + account.getEmail());
                 Log.d(TAG, "Account Display Name: " + account.getDisplayName());
-                Toast.makeText(this, "Google Sign-In successful, authenticating with Firebase...", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
@@ -395,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "Successfully signed in with Google!", Toast.LENGTH_SHORT).show();
                             navigateToWelcome(user);
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

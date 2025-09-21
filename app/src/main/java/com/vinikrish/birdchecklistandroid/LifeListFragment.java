@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import com.vinikrish.birdchecklistandroid.models.Bird;
+import com.vinikrish.birdchecklistandroid.utils.ProgressDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,11 +85,17 @@ public class LifeListFragment extends Fragment implements GroupedLifeListAdapter
         
         Log.d(TAG, "Removing bird: " + bird.getComName() + " with ID: " + bird.getId());
         
+        // Show progress dialog
+        ProgressDialogUtils.showProgressDialog(getContext(), "Removing bird...");
+        
         DatabaseReference birdsRef = FirebaseManager.getInstance().getBirdsReference();
         birdsRef.child(bird.getId())
                 .removeValue()
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Bird successfully deleted from Firebase");
+                    
+                    // Dismiss progress dialog
+                    ProgressDialogUtils.dismissProgressDialog();
                     
                     // Remove from local list and update adapter
                     birdList.remove(bird);
@@ -102,6 +109,10 @@ public class LifeListFragment extends Fragment implements GroupedLifeListAdapter
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error deleting bird from Firebase: " + e.getMessage(), e);
+                    
+                    // Dismiss progress dialog
+                    ProgressDialogUtils.dismissProgressDialog();
+                    
                     Toast.makeText(getContext(), "Failed to remove bird", Toast.LENGTH_SHORT).show();
                 });
     }
@@ -113,6 +124,9 @@ public class LifeListFragment extends Fragment implements GroupedLifeListAdapter
         }
         
         Log.d(TAG, "Loading birds from Firebase for userId: " + userId);
+        
+        // Show progress dialog
+        ProgressDialogUtils.showLoadingLifeListDialog(getContext());
         
         DatabaseReference birdsRef = FirebaseManager.getInstance().getBirdsReference();
         
@@ -145,6 +159,9 @@ public class LifeListFragment extends Fragment implements GroupedLifeListAdapter
                 
                 Log.d(TAG, "Total birds loaded: " + birdList.size());
                 
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         adapter.updateBirds(birdList);
@@ -156,6 +173,10 @@ public class LifeListFragment extends Fragment implements GroupedLifeListAdapter
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "Error loading birds from Firebase: " + databaseError.getMessage(), databaseError.toException());
+                
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> updateEmptyState());
                 }

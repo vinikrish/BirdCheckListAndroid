@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.vinikrish.birdchecklistandroid.utils.CustomDialogUtils;
+import com.vinikrish.birdchecklistandroid.utils.ProgressDialogUtils;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -124,6 +125,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
         
         String userId = currentUser.getUid();
+        
+        // Show progress dialog
+        ProgressDialogUtils.showLoadingProfileDialog(this);
+        
         DatabaseReference birdsRef = FirebaseManager.getInstance().getBirdsReference();
         
         birdsRef.addValueEventListener(new ValueEventListener() {
@@ -159,12 +164,18 @@ public class ProfileActivity extends AppCompatActivity {
                     countryBirdCounts.put(country, uniqueBirdCount);
                 }
                 
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 displayBirdCounts(countryBirdCounts);
             }
             
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "Error loading bird counts from Firebase", databaseError.toException());
+                
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
             }
         });
     }

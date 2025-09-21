@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vinikrish.birdchecklistandroid.utils.CustomDialogUtils;
+import com.vinikrish.birdchecklistandroid.utils.ProgressDialogUtils;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -764,6 +765,9 @@ public class AddBirdsFragment extends Fragment {
             return;
         }
         
+        // Show progress dialog
+        ProgressDialogUtils.showLoadingBirdListDialog(getContext());
+        
         DatabaseReference birdsRef = FirebaseManager.getInstance().getBirdsReference();
         
         // Remove existing listener if it exists
@@ -798,6 +802,9 @@ public class AddBirdsFragment extends Fragment {
                 
                 Log.d(TAG, "Total existing birds loaded: " + existingBirds.size());
                 
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 // Update adapter with existing bird data
                 if (groupedBirdAdapter != null) {
                     Log.d(TAG, "Calling setExistingBirds on adapter");
@@ -810,6 +817,9 @@ public class AddBirdsFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "Error loading existing birds from Firebase", databaseError.toException());
+                
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
             }
         };
         
@@ -875,7 +885,18 @@ public class AddBirdsFragment extends Fragment {
                     Bird maleBird = new Bird();
                     maleBird.setSciName(bird.getSciName());
                     maleBird.setComName(bird.getComName());
-                    maleBird.setCountry(selectedCountry);
+                    
+                    // Check if this is an existing bird and preserve its original country
+                    String maleCompositeKey = bird.getComName() + "_M";
+                    Bird existingMaleBird = existingBirds.get(maleCompositeKey);
+                    if (existingMaleBird != null) {
+                        // Preserve original country for existing bird
+                        maleBird.setCountry(existingMaleBird.getCountry());
+                    } else {
+                        // Use selected country for new bird
+                        maleBird.setCountry(selectedCountry);
+                    }
+                    
                     maleBird.setUsername(username);
                     maleBird.setUserId(userId);
                     maleBird.setGender("M");
@@ -897,7 +918,18 @@ public class AddBirdsFragment extends Fragment {
                     Bird femaleBird = new Bird();
                     femaleBird.setSciName(bird.getSciName());
                     femaleBird.setComName(bird.getComName());
-                    femaleBird.setCountry(selectedCountry);
+                    
+                    // Check if this is an existing bird and preserve its original country
+                    String femaleCompositeKey = bird.getComName() + "_F";
+                    Bird existingFemaleBird = existingBirds.get(femaleCompositeKey);
+                    if (existingFemaleBird != null) {
+                        // Preserve original country for existing bird
+                        femaleBird.setCountry(existingFemaleBird.getCountry());
+                    } else {
+                        // Use selected country for new bird
+                        femaleBird.setCountry(selectedCountry);
+                    }
+                    
                     femaleBird.setUsername(username);
                     femaleBird.setUserId(userId);
                     femaleBird.setGender("F");
@@ -920,6 +952,9 @@ public class AddBirdsFragment extends Fragment {
         Log.d(TAG, "Bird processing took: " + (processingEnd - getCheckboxStatesStart) + "ms");
         Log.d(TAG, "About to save " + cleanBirds.size() + " birds to Firebase");
         
+        // Show progress dialog
+        ProgressDialogUtils.showSavingBirdsDialog(getContext());
+        
         // Save to Firebase with optimized callback using existing birds data
         long firebaseSaveStart = System.currentTimeMillis();
         Log.d(TAG, "Starting Firebase save at: " + firebaseSaveStart);
@@ -932,6 +967,10 @@ public class AddBirdsFragment extends Fragment {
                 Log.d(TAG, "Firebase save successful at: " + firebaseSaveEnd);
                 Log.d(TAG, "Firebase save took: " + (firebaseSaveEnd - firebaseSaveStart) + "ms");
                 Log.d(TAG, "Total save operation took: " + totalTime + "ms");
+                
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 // Show success dialog
                 new AlertDialog.Builder(getContext())
                         .setTitle("Success")
@@ -959,6 +998,10 @@ public class AddBirdsFragment extends Fragment {
                 Log.e(TAG, "Firebase save failed: " + error);
                 Log.e(TAG, "Failed Firebase save took: " + (firebaseSaveEnd - firebaseSaveStart) + "ms");
                 Log.e(TAG, "Total failed save operation took: " + totalTime + "ms");
+                
+                // Dismiss progress dialog
+                ProgressDialogUtils.dismissProgressDialog();
+                
                 // Show error dialog
                 new AlertDialog.Builder(getContext())
                         .setTitle("Error")
