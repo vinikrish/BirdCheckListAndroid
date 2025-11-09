@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme text colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#CCCCCC</color>
+    <color name="text_hint">#888888</color>
+    
+    <!-- Dark theme background colors -->
+    <color name="background_primary">#121212</color>
+    <color name="background_secondary">#1E1E1E</color>
+    <color name="background_card">#1E1E1E</color>
+    
+    <!-- Dark theme header colors -->
+    <color name="header_background">#2C2C2C</color>
+    <color name="header_text">#64B5F6</color>
+</resources>

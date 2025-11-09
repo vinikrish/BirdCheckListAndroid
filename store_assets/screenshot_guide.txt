@@ -1,0 +1,79 @@
+SCREENSHOT GUIDE FOR GOOGLE PLAY STORE
+
+=== REQUIREMENTS ===
+• Minimum: 2 screenshots
+• Maximum: 8 screenshots
+• Format: PNG or JPEG
+• Phone: 16:9 or 9:16 aspect ratio
+• Minimum dimension: 320px
+• Maximum dimension: 3840px
+
+=== RECOMMENDED SCREENSHOTS TO TAKE ===
+
+1. MAIN BIRD LIST SCREEN
+   - Show the app with several birds checked off
+   - Display the country selector (USA selected)
+   - Show the search functionality
+   - Capture: Life List tab active
+
+2. ADD BIRDS SCREEN
+   - Show the "Add Birds" functionality
+   - Display some birds in the list with checkboxes
+   - Show the filtering/search capabilities
+   - Capture: Add Birds tab active
+
+3. ABOUT/PRIVACY SCREEN
+   - Show the privacy policy section
+   - Display app information
+   - Capture: About tab active
+
+4. BIRD DETAIL/SIGHTING SCREEN (if available)
+   - Show individual bird information
+   - Display any photo or note functionality
+   - Show the bird's status (seen/not seen)
+
+5. LOCATION SELECTION SCREEN
+   - Show the country dropdown with multiple options
+   - Demonstrate the location-based filtering
+
+=== SCREENSHOT TIPS ===
+
+✅ DO:
+• Use a clean, uncluttered device
+• Take screenshots in good lighting
+• Show the app with realistic data
+• Include some checked birds to show functionality
+• Use consistent device orientation (portrait recommended)
+• Ensure text is readable
+• Show key features in action
+
+❌ DON'T:
+• Include personal information
+• Show empty or broken states
+• Use low-quality images
+• Include device notifications
+• Show error messages
+• Use placeholder text
+
+=== TAKING SCREENSHOTS ===
+
+1. Open your app on the device/emulator
+2. Navigate to each key screen
+3. Ensure the screen shows meaningful content
+4. Take screenshots using:
+   - Android: Power + Volume Down
+   - Emulator: Camera icon in toolbar
+   - ADB: adb shell screencap -p /sdcard/screenshot.png
+
+=== OPTIONAL ENHANCEMENTS ===
+• Add text overlays highlighting key features
+• Create device mockups with frames
+• Add captions explaining functionality
+• Use consistent branding colors
+
+=== FILE NAMING CONVENTION ===
+• screenshot_1_main_list.png
+• screenshot_2_add_birds.png
+• screenshot_3_about_privacy.png
+• screenshot_4_bird_detail.png
+• screenshot_5_location_select.png

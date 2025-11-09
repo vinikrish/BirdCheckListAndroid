@@ -13,7 +13,28 @@
           "package_name": "com.vinikrish.birdchecklistandroid"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "405372480238-ab22j7gps4ncjfgm95kg8s5gt43uleil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vinikrish.birdchecklistandroid",
+            "certificate_hash": "d4b19d817c70e529a013f813c5f2ce7fb79de6a3"
+          }
+        },
+        {
+          "client_id": "405372480238-muhvrcopo29e8n00dssdp3v4e93a6hbc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vinikrish.birdchecklistandroid",
+            "certificate_hash": "6046d509994de431527d0866040778610a02bfa2"
+          }
+        },
+        {
+          "client_id": "405372480238-gk5au2p57h5c4p65s6j1h0bfk4oh54j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB9ThpVdUI3A1lIr6hIA0t1OfAEz_tAfko"
@@ -21,7 +42,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405372480238-gk5au2p57h5c4p65s6j1h0bfk4oh54j7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

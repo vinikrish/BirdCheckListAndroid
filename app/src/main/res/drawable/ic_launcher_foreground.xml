@@ -1,0 +1,70 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Bird Silhouette - Larger and repositioned -->
+    <group android:translateX="25" android:translateY="15" android:scaleX="1.2" android:scaleY="1.2">
+        <!-- Bird Body -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M25,35 Q35,25 45,35 Q45,45 35,50 Q25,45 25,35 Z" />
+        <!-- Bird Head -->
+        <path
+            android:fillColor="#1B5E20"
+            android:pathData="M15,25 Q25,15 35,25 Q35,35 25,35 Q15,35 15,25 Z" />
+        <!-- Bird Beak -->
+        <path
+            android:fillColor="#FF6F00"
+            android:pathData="M10,25 L15,27 L15,23 Z" />
+        <!-- Bird Eye -->
+        <circle
+            android:fillColor="#FFFFFF"
+            android:pathData="M22,25 A2,2 0 0,1 26,25 A2,2 0 0,1 22,25" />
+        <!-- Bird Wing -->
+        <path
+            android:fillColor="#2E7D32"
+            android:pathData="M35,30 Q45,25 50,35 Q45,40 35,35 Z" />
+    </group>
+    
+    <!-- Checklist - Larger and repositioned -->
+    <group android:translateX="15" android:translateY="55" android:scaleX="1.1" android:scaleY="1.1">
+        <!-- Checklist Background -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeColor="#E0E0E0"
+            android:strokeWidth="1"
+            android:pathData="M0,0 L40,0 Q42,0 42,2 L42,28 Q42,30 40,30 L0,30 Q-2,30 -2,28 L-2,2 Q-2,0 0,0 Z" />
+        
+        <!-- Checklist Items -->
+        <!-- Item 1 - Checked -->
+        <path
+            android:fillColor="#4CAF50"
+            android:pathData="M3,5 L7,5 L7,9 L3,9 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeWidth="1"
+            android:pathData="M4,7 L5.5,8.5 L7.5,6" />
+        
+        <!-- Item 2 - Checked -->
+        <path
+            android:fillColor="#4CAF50"
+            android:pathData="M3,12 L7,12 L7,16 L3,16 Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeWidth="1"
+            android:pathData="M4,14 L5.5,15.5 L7.5,13" />
+        
+        <!-- Item 3 - Unchecked -->
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M3,19 L7,19 L7,23 L3,23 Z" />
+        
+        <!-- Item 4 - Unchecked -->
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M3,26 L7,26 L7,30 L3,30 Z" />
+    </group>
+    
+</vector>

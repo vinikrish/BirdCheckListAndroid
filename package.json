@@ -1,0 +1,26 @@
+{
+  "name": "bird-checklist-android",
+  "version": "1.6.0",
+  "description": "Bird Checklist Android App - Automated Release Scripts",
+  "scripts": {
+    "release": "./build_release.sh",
+    "release:quick": "./gradlew bundleRelease && cp app/build/outputs/bundle/release/app-release.aab store_assets/",
+    "build:debug": "./gradlew assembleDebug",
+    "build:release": "./gradlew bundleRelease",
+    "clean": "./gradlew clean",
+    "test": "./gradlew test",
+    "version:bump": "npm version patch && git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "android",
+    "bird",
+    "checklist",
+    "mobile-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

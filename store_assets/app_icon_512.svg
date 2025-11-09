@@ -1,0 +1,40 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background circle -->
+  <circle cx="256" cy="256" r="240" fill="white" stroke="#DDDDDD" stroke-width="2"/>
+  
+  <!-- Green bird silhouette -->
+  <g transform="translate(180, 120) scale(1.4)">
+    <!-- Bird body -->
+    <ellipse cx="40" cy="50" rx="30" ry="20" fill="#4CAF50"/>
+    <!-- Bird head -->
+    <circle cx="20" cy="35" r="15" fill="#4CAF50"/>
+    <!-- Bird beak -->
+    <polygon points="8,30 3,35 8,40" fill="#FF9800"/>
+    <!-- Bird eye -->
+    <circle cx="15" cy="30" r="2" fill="white"/>
+    <circle cx="16" cy="29" r="1" fill="black"/>
+    <!-- Bird wing -->
+    <ellipse cx="50" cy="45" rx="15" ry="10" fill="#388E3C"/>
+  </g>
+  
+  <!-- Green checklist -->
+  <g transform="translate(140, 280) scale(1.3)">
+    <!-- Checklist background -->
+    <rect x="0" y="0" width="120" height="80" rx="6" fill="white" stroke="#4CAF50" stroke-width="2"/>
+    
+    <!-- Checklist items -->
+    <!-- Item 1 - checked -->
+    <rect x="10" y="15" width="10" height="10" fill="#4CAF50" rx="1"/>
+    <path d="M12 20 L15 23 L20 18" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <line x1="28" y1="20" x2="105" y2="20" stroke="#4CAF50" stroke-width="1.5"/>
+    
+    <!-- Item 2 - checked -->
+    <rect x="10" y="35" width="10" height="10" fill="#4CAF50" rx="1"/>
+    <path d="M12 40 L15 43 L20 38" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <line x1="28" y1="40" x2="105" y2="40" stroke="#4CAF50" stroke-width="1.5"/>
+    
+    <!-- Item 3 - unchecked -->
+    <rect x="10" y="55" width="10" height="10" fill="none" stroke="#CCCCCC" stroke-width="1" rx="1"/>
+    <line x1="28" y1="60" x2="85" y2="60" stroke="#CCCCCC" stroke-width="1.5"/>
+  </g>
+</svg>
