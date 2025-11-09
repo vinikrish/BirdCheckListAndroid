@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Birds Query Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .search-section {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            width: auto;
+            padding: 8px 16px;
+            margin-left: 10px;
+        }
+        .logout-btn:hover {
+            background-color: #da190b;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .bird-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .bird-card h3 {
+            margin: 0 0 10px 0;
+            color: #2c5530;
+        }
+        .bird-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 14px;
+        }
+        .bird-info span {
+            background: #f8f9fa;
+            padding: 5px 8px;
+            border-radius: 3px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .user-info {
+            display: inline-block;
+            background: #e8f5e8;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .google-signin-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .google-signin-btn:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐦 Firebase Birds Query Tool</h1>
+        
+        <div class="auth-section">
+            <h2>Authentication</h2>
+            <div id="authStatus" class="status info">Please sign in with Google to access the database</div>
+            <div id="userInfo" style="display: none;">
+                <span class="user-info">Signed in as: <span id="userEmail"></span></span>
+                <button class="logout-btn" onclick="signOut()">Sign Out</button>
+            </div>
+            <div id="authForm">
+                <button onclick="signInWithGoogle()" class="google-signin-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px;">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <h2>Search Birds</h2>
+            <div class="form-group">
+                <label for="searchType">Search by:</label>
+                <select id="searchType">
+                    <option value="username">Username</option>
+                    <option value="comName">Common Name</option>
+                    <option value="sciName">Scientific Name</option>
+                    <option value="country">Country</option>
+                    <option value="all">Show All Birds</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="searchValue">Search Value:</label>
+                <input type="text" id="searchValue" placeholder="Enter search term">
+            </div>
+            <button onclick="searchBirds()" id="searchBtn" disabled>🔍 Search Birds</button>
+            <button onclick="refreshSearch()" class="search-btn" style="background-color: #28a745;" id="refreshBtn" disabled>🔄 Refresh</button>
+        </div>
+
+        <!-- Enhanced: Search and Delete records by email with wildcard support -->
+        <div class="search-section" style="background:#fdecea;">
+            <h2>Search & Delete Records by Email</h2>
+            <div class="form-group">
+                <label for="deleteEmail">Email search pattern:</label>
+                <input type="text" id="deleteEmail" placeholder="vin* or user@example.com or *@gmail.com">
+                <small style="color:#666; font-size:12px; margin-top:5px; display:block;">
+                    Use * for wildcard matching. Examples: "vin*" matches "vinikrish@gmail.com", "*@gmail.com" matches all Gmail users
+                </small>
+            </div>
+            <button onclick="searchEmailPattern()" id="searchEmailBtn" disabled style="background-color:#17a2b8;">🔍 Search Emails</button>
+            <button onclick="deleteByEmailPattern()" id="deleteBtn" disabled style="background-color:#d9534f;">🗑️ Delete Found Records</button>
+            <div id="deleteStatus"></div>
+            <div id="emailSearchResults" style="margin-top:15px;"></div>
+            <div class="status info" style="margin-top:10px;">
+                Safety: Search first to preview matches, then delete. Type <strong>DELETE</strong> when prompted to confirm deletion.
+            </div>
+        </div>
+
+        <div class="results">
+            <div id="resultsStatus"></div>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        // Updated: include remove and update for deletions
+        import { getDatabase, ref, query, orderByChild, equalTo, get, limitToFirst, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9ThpVdUI3A1lIr6hIA0t1OfAEz_tAfko",
+            authDomain: "vinikrishbirdchecklistandroid.firebaseapp.com",
+            databaseURL: "https://vinikrishbirdchecklistandroid-default-rtdb.firebaseio.com",
+            projectId: "vinikrishbirdchecklistandroid",
+            storageBucket: "vinikrishbirdchecklistandroid.firebasestorage.app"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // Global variables
+        window.auth = auth;
+        window.database = database;
+        window.query = query;
+        window.ref = ref;
+        window.orderByChild = orderByChild;
+        window.equalTo = equalTo;
+        window.get = get;
+        window.limitToFirst = limitToFirst;
+        window.signInWithPopup = signInWithPopup;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.firebaseSignOut = firebaseSignOut;
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            const authStatus = document.getElementById('authStatus');
+            const authForm = document.getElementById('authForm');
+            const userInfo = document.getElementById('userInfo');
+            const userEmail = document.getElementById('userEmail');
+            const searchBtn = document.getElementById('searchBtn');
+            // Enhanced: email search and delete button toggles
+            const deleteBtn = document.getElementById('deleteBtn');
+            const searchEmailBtn = document.getElementById('searchEmailBtn');
+
+            if (user) {
+                authStatus.className = 'status success';
+                authStatus.textContent = 'Successfully authenticated with Google!';
+                authForm.style.display = 'none';
+                userInfo.style.display = 'block';
+                userEmail.textContent = user.email;
+                searchBtn.disabled = false;
+                document.getElementById('refreshBtn').disabled = false;
+                if (deleteBtn) deleteBtn.disabled = false;
+                if (searchEmailBtn) searchEmailBtn.disabled = false;
+            } else {
+                authStatus.className = 'status info';
+                authStatus.textContent = 'Please sign in with Google to access the database';
+                authForm.style.display = 'block';
+                userInfo.style.display = 'none';
+                searchBtn.disabled = true;
+                document.getElementById('refreshBtn').disabled = true;
+                if (deleteBtn) deleteBtn.disabled = true;
+                if (searchEmailBtn) searchEmailBtn.disabled = true;
+                document.getElementById('resultsContainer').innerHTML = '';
+                document.getElementById('resultsStatus').innerHTML = '';
+            }
+        });
+
+        // Google Sign in function
+        window.signInWithGoogle = async function() {
+            const authStatus = document.getElementById('authStatus');
+            const provider = new GoogleAuthProvider();
+
+            try {
+                authStatus.className = 'status info';
+                authStatus.textContent = 'Signing in with Google...';
+                
+                console.log('Current URL:', window.location.href);
+                console.log('Current domain:', window.location.hostname);
+                console.log('Current port:', window.location.port);
+                
+                const result = await signInWithPopup(auth, provider);
+                console.log('Sign in successful:', result.user.email);
+            } catch (error) {
+                authStatus.className = 'status error';
+                authStatus.textContent = `Google Sign in failed: ${error.message}`;
+                console.error('Full error details:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
+                
+                // Show more specific error message
+                if (error.code === 'auth/unauthorized-domain') {
+                    authStatus.textContent = `Unauthorized domain error. Current domain: ${window.location.hostname}:${window.location.port}. Please add this exact domain to Firebase authorized domains.`;
+                }
+            }
+        };
+
+        // Sign out function
+        window.signOut = async function() {
+            try {
+                await firebaseSignOut(auth);
+            } catch (error) {
+                console.error('Sign out error:', error);
+            }
+        };
+
+        // Refresh search function
+        window.refreshSearch = async function() {
+            const resultsStatus = document.getElementById('resultsStatus');
+            resultsStatus.innerHTML = '<div class="status info">🔄 Refreshing data...</div>';
+            
+            // Clear any cached data by forcing a fresh search
+            setTimeout(() => {
+                searchBirds();
+            }, 500);
+        };
+
+        // Search birds function
+        window.searchBirds = async function() {
+            const searchType = document.getElementById('searchType').value;
+            const searchValue = document.getElementById('searchValue').value;
+            const resultsStatus = document.getElementById('resultsStatus');
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            if (searchType !== 'all' && !searchValue.trim()) {
+                resultsStatus.innerHTML = '<div class="status error">Please enter a search value</div>';
+                return;
+            }
+
+            resultsStatus.innerHTML = '<div class="loading">🔍 Searching...</div>';
+            resultsContainer.innerHTML = '';
+
+            try {
+                let birdsQuery;
+                const birdsRef = ref(database, 'birds');
+
+                if (searchType === 'all') {
+                    birdsQuery = query(birdsRef, limitToFirst(100)); // Limit to first 100 for performance
+                } else {
+                    birdsQuery = query(birdsRef, orderByChild(searchType), equalTo(searchValue.trim()));
+                }
+
+                const snapshot = await get(birdsQuery);
+                
+                if (snapshot.exists()) {
+                    const birds = snapshot.val();
+                    const birdArray = Object.entries(birds).map(([key, value]) => ({id: key, ...value}));
+                    
+                    resultsStatus.innerHTML = `<div class="status success">Found ${birdArray.length} bird(s)</div>`;
+                    
+                    birdArray.forEach(bird => {
+                        const birdCard = document.createElement('div');
+                        birdCard.className = 'bird-card';
+                        birdCard.innerHTML = `
+                            <h3>${bird.comName || 'Unknown'}</h3>
+                            <div class="bird-info">
+                                <span><strong>Scientific Name:</strong> ${bird.sciName || 'N/A'}</span>
+                                <span><strong>Username:</strong> ${bird.username || 'N/A'}</span>
+                                <span><strong>User ID:</strong> ${bird.userId || 'N/A'}</span>
+                                <span><strong>Country:</strong> ${bird.country || 'N/A'}</span>
+                                <span><strong>Date:</strong> ${bird.date || 'N/A'}</span>
+                                <span><strong>Location:</strong> ${bird.location || 'N/A'}</span>
+                                <span><strong>Notes:</strong> ${bird.notes || 'N/A'}</span>
+                                <span><strong>Record ID:</strong> ${bird.id}</span>
+                            </div>
+                        `;
+                        resultsContainer.appendChild(birdCard);
+                    });
+                } else {
+                    resultsStatus.innerHTML = '<div class="status info">No birds found matching your search criteria</div>';
+                }
+            } catch (error) {
+                resultsStatus.innerHTML = `<div class="status error">Search failed: ${error.message}</div>`;
+                console.error('Search error:', error);
+            }
+        };
+
+        // Allow Enter key to trigger search
+        document.getElementById('searchValue').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('searchBtn').disabled) {
+                searchBirds();
+            }
+        });
+
+        // Global variable to store current search results
+        let currentEmailSearchResults = [];
+
+        // Wildcard pattern matching function
+        function matchesWildcard(text, pattern) {
+            if (!pattern.includes('*')) {
+                return text === pattern; // Exact match if no wildcard
+            }
+            
+            // Convert wildcard pattern to regex
+            const regexPattern = pattern
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape special regex chars
+                .replace(/\\\*/g, '.*'); // Replace \* with .*
+            
+            const regex = new RegExp(`^${regexPattern}$`, 'i'); // Case insensitive
+            return regex.test(text);
+        }
+
+        // Search emails by pattern function
+        window.searchEmailPattern = async function() {
+            const emailInput = document.getElementById('deleteEmail');
+            const deleteStatus = document.getElementById('deleteStatus');
+            const emailSearchResults = document.getElementById('emailSearchResults');
+            const pattern = (emailInput?.value || '').trim();
+
+            if (!pattern) {
+                deleteStatus.innerHTML = '<div class="status error">Please enter an email pattern</div>';
+                return;
+            }
+
+            deleteStatus.innerHTML = '<div class="loading">🔍 Searching for matching emails...</div>';
+            emailSearchResults.innerHTML = '';
+            currentEmailSearchResults = [];
+
+            try {
+                const birdsRef = ref(database, 'birds');
+                const birdsQuery = query(birdsRef); // Get all records to filter client-side
+                const snapshot = await get(birdsQuery);
+
+                if (!snapshot.exists()) {
+                    deleteStatus.innerHTML = '<div class="status info">No records found in database</div>';
+                    return;
+                }
+
+                const data = snapshot.val();
+                const matchingRecords = [];
+                const uniqueEmails = new Set();
+
+                // Filter records by wildcard pattern
+                Object.entries(data).forEach(([key, record]) => {
+                    const email = record.username || '';
+                    if (matchesWildcard(email, pattern)) {
+                        matchingRecords.push({id: key, ...record});
+                        uniqueEmails.add(email);
+                    }
+                });
+
+                currentEmailSearchResults = matchingRecords;
+
+                if (matchingRecords.length === 0) {
+                    deleteStatus.innerHTML = `<div class="status info">No records found matching pattern "${pattern}"</div>`;
+                    return;
+                }
+
+                deleteStatus.innerHTML = `<div class="status success">Found ${matchingRecords.length} record(s) from ${uniqueEmails.size} unique email(s) matching "${pattern}"</div>`;
+
+                // Display matching emails and record counts
+                const emailCounts = {};
+                matchingRecords.forEach(record => {
+                    const email = record.username || 'Unknown';
+                    emailCounts[email] = (emailCounts[email] || 0) + 1;
+                });
+
+                let resultsHTML = '<div style="background:#f8f9fa; padding:15px; border-radius:6px; margin-top:10px;">';
+                resultsHTML += '<h4 style="margin:0 0 10px 0; color:#495057;">📧 Matching Emails:</h4>';
+                
+                Object.entries(emailCounts).forEach(([email, count]) => {
+                    resultsHTML += `<div style="padding:5px 0; border-bottom:1px solid #dee2e6;">
+                        <strong>${email}</strong> - ${count} record(s)
+                    </div>`;
+                });
+
+                resultsHTML += '</div>';
+                emailSearchResults.innerHTML = resultsHTML;
+
+            } catch (error) {
+                console.error('Search error:', error);
+                deleteStatus.innerHTML = `<div class="status error">Search failed: ${error.message}</div>`;
+            }
+        };
+
+        // Delete by email pattern function
+        window.deleteByEmailPattern = async function() {
+            const deleteStatus = document.getElementById('deleteStatus');
+            const emailSearchResults = document.getElementById('emailSearchResults');
+
+            if (currentEmailSearchResults.length === 0) {
+                deleteStatus.innerHTML = '<div class="status error">No search results to delete. Please search first.</div>';
+                return;
+            }
+
+            const uniqueEmails = [...new Set(currentEmailSearchResults.map(r => r.username || 'Unknown'))];
+            const emailList = uniqueEmails.join(', ');
+
+            const confirmation = prompt(`This will permanently delete ${currentEmailSearchResults.length} record(s) from these emails:\n${emailList}\n\nType DELETE to confirm.`);
+            if (confirmation !== 'DELETE') {
+                deleteStatus.innerHTML = '<div class="status info">Deletion cancelled</div>';
+                return;
+            }
+
+            deleteStatus.innerHTML = '<div class="loading">🗑️ Deleting records...</div>';
+
+            try {
+                // Batch deletion using multi-location update
+                const updates = {};
+                currentEmailSearchResults.forEach(record => {
+                    updates[`/birds/${record.id}`] = null;
+                });
+
+                await update(ref(database), updates);
+
+                deleteStatus.innerHTML = `<div class="status success">✅ Deleted ${currentEmailSearchResults.length} record(s) from ${uniqueEmails.length} email(s)</div>`;
+                emailSearchResults.innerHTML = '';
+                currentEmailSearchResults = [];
+                
+                // Clear the search input
+                document.getElementById('deleteEmail').value = '';
+                
+                // Optional: refresh main search results if user had a search active
+                if (!document.getElementById('searchBtn').disabled) {
+                    refreshSearch();
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                deleteStatus.innerHTML = `<div class="status error">Delete failed: ${error.message}</div>`;
+            }
+        };
+
+        // Allow Enter key to trigger email search
+        const deleteEmailEl = document.getElementById('deleteEmail');
+        if (deleteEmailEl) {
+            deleteEmailEl.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !document.getElementById('searchEmailBtn').disabled) {
+                    searchEmailPattern();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+<!-- duplicate script removed -->

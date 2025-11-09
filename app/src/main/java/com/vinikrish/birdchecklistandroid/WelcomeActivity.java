@@ -32,6 +32,14 @@ public class WelcomeActivity extends AppCompatActivity implements AddBirdsFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        // Apply system bar insets to avoid overlapping nav/status bars
+        android.view.View root = findViewById(R.id.rootContainer);
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            androidx.core.graphics.Insets bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
         
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
